@@ -1,0 +1,53 @@
+{% extends "base.html.twig" %}
+{% block body %}
+    <div class="container">
+        <h1>Gästebuch</h1>
+        <!-- SUCCESS MESSAGE -->
+        {% for label, messages in app.flashes %}
+            {% for message in messages %}
+                <div class="alert alert-{{ label }} d-flex align-items-center" role="alert">
+                    <div>
+                        {{ message }}
+                    </div>
+                </div>
+            {% endfor %}
+        {% endfor %}
+        <!-- SUCCESS MESSAGE END -->
+
+        <!-- SHOW GUESTBOOK FORM -->
+        {{  form(guestBookForm) }}
+        <!-- SHOW GUESTBOOK FORM -->
+
+        {% for entry in entries %}
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="class-title">{{ entry.subtitle }}</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">von {{ entry.username }} am {{ entry.createdAt|date('d.m.Y') }} um {{ entry.createdAt|date('H:m:s') }}</h6>
+                    <p class="card-text">{{ entry.body }}</p>
+                </div>
+            </div>
+        {% endfor %}
+
+        {% if maxPages > 1 %}
+            <nav aria-label="Page navigation example">
+                <ul class="pagination">
+                    <li class="page-item">
+                        <a class="page-link" href="{{ path('index',{page:1}) }}" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                    {% for page in 1..maxPages %}
+                        <li class="page-item {% if page is same as(currentPage) %}active{% endif %}">
+                            <a class="page-link" href="{{ path('index',{page:page}) }}">{{ page }}</a>
+                        </li>
+                    {% endfor %}
+                    <li class="page-item">
+                        <a class="page-link" href="{{ path('index',{page:maxPages}) }}" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        {% endif %}
+    </div>
+{% endblock %}
